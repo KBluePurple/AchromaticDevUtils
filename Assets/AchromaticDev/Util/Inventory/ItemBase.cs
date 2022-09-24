@@ -4,7 +4,7 @@ using UnityEngine;
 namespace AchromaticDev.Util.Inventory
 {
     [Serializable]
-    public abstract class ItemBase<T> : ScriptableObject where T : Enum
+    public abstract class ItemBase<T> where T : Enum
     {
         public T Type => _type;
         [SerializeField] private readonly T _type;

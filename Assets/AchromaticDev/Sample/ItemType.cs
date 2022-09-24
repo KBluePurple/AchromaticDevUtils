@@ -1,21 +1,17 @@
-
-namespace AchromaticDev.Util.Inventory
+public enum ItemType
 {
-    public enum ItemType
-    {
-        // 재료
-        Wood,
-        Stone,
-        Iron,
-        Gold,
-        Diamond,
+    // 재료
+    Wood,
+    Stone,
+    Iron,
+    Gold,
+    Diamond,
 
-        // 음식
-        Apple,
-        Bread,
-        Steak,
-        Fish,
-        Chicken,
-        Pork
-    }
+    // 음식
+    Apple,
+    Bread,
+    Steak,
+    Fish,
+    Chicken,
+    Pork
 }

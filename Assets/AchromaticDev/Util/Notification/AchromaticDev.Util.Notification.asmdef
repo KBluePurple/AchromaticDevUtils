@@ -1,0 +1,16 @@
+{
+    "name": "AchromaticDev.Util.Notification",
+    "rootNamespace": "AchromaticDev.Util.Notification",
+    "references": [
+        "GUID:6b390a04765ef3945b99fde6065538a1"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
