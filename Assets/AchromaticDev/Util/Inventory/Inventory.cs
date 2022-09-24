@@ -11,8 +11,8 @@ namespace AchromaticDev.Util.Inventory
         public int Size => _size;
         [SerializeField] int _size;
 
-        internal Action<ItemStack<T>> _onItemAdded;
-        internal Action<ItemStack<T>> _onItemRemoved;
+        public Action<ItemStack<T>> OnItemAdded;
+        public Action<ItemStack<T>> OnItemRemoved;
 
         [SerializeField] private List<ItemStack<T>> items = new List<ItemStack<T>>();
 
@@ -37,12 +37,12 @@ namespace AchromaticDev.Util.Inventory
                 item = new ItemStack<T>(type, count);
                 item._inventory = this;
                 items.Add(item);
-                _onItemAdded?.Invoke(item);
+                OnItemAdded?.Invoke(item);
             }
             else
             {
                 item.Count += count;
-                _onItemAdded?.Invoke(new ItemStack<T>(type, count));
+                OnItemAdded?.Invoke(new ItemStack<T>(type, count));
             }
         }
 
@@ -57,7 +57,7 @@ namespace AchromaticDev.Util.Inventory
             {
                 items.Remove(item);
             }
-            _onItemRemoved?.Invoke(new ItemStack<T>(type, count));
+            OnItemRemoved?.Invoke(new ItemStack<T>(type, count));
         }
 
         public ItemStack<T> GetItem(T type)
@@ -79,6 +79,11 @@ namespace AchromaticDev.Util.Inventory
         public bool IsFull()
         {
             return items.Count == _size;
+        }
+
+        public void Clear()
+        {
+            items.Clear();
         }
     }
 }

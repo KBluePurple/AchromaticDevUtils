@@ -10,7 +10,7 @@ namespace AchromaticDev.Util.Inventory
         [SerializeField] T _type;
 
         public Inventory<T> Inventory => _inventory;
-        internal Inventory<T> _inventory;
+        [NonSerialized] internal Inventory<T> _inventory;
 
         public int Count
         {

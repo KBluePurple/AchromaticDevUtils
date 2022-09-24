@@ -11,8 +11,8 @@ namespace AchromaticDev.Util.Inventory
         private void Start()
         {
             inventory = new Inventory<ItemType>(10);
-            inventory._onItemAdded += OnItemAdded;
-            inventory._onItemRemoved += OnItemRemoved;
+            inventory.OnItemAdded += OnItemAdded;
+            inventory.OnItemRemoved += OnItemRemoved;
         }
 
         private void OnItemAdded(ItemStack<ItemType> item)
