@@ -1,22 +1,65 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 namespace AchromaticDev.Util.Inventory
 {
-    public static class ItemDatabase
+    public class ItemInfo<T> where T : Enum
     {
-        static Dictionary<string, ItemBase> _items = new Dictionary<string, ItemBase>();
+        public T Type { get; private set; }
+        public Sprite Icon { get; private set; }
+        public string Name { get; private set; }
+        public string Description { get; private set; }
+        public int MaxStack { get; private set; }
 
-        public static void RegisterItem<T>() where T : ItemBase
+        public ItemBase<T> ItemClass { get; private set; }
+
+        public ItemInfo(T type, Sprite icon, string name, string description, int maxStack, ItemBase<T> itemClass)
         {
-            var item = System.Activator.CreateInstance<T>();
-            _items.Add(item.Name, item);
+            Type = type;
+            Icon = icon;
+            Name = name;
+            Description = description;
+            MaxStack = maxStack;
+            ItemClass = itemClass;
+        }
+    }
+
+    public static class ItemDatabase<T> where T : Enum
+    {
+        static Dictionary<T, ItemInfo<T>> _itemInfos = new Dictionary<T, ItemInfo<T>>();
+
+        public static void RegisterItemClass(T type, Sprite icon, string name, string description, int maxStack)
+        {
+            if (_itemInfos.ContainsKey(type))
+                throw new ArgumentException("Item type already registered");
+
+            _itemInfos.Add(type, new ItemInfo<T>(type, icon, name, description, maxStack, null));
         }
 
-        public static ItemBase GetItem(string name)
+        public static void RegisterItemClass(T type, Sprite icon, string name, string description, int maxStack = 99, ItemBase<T> itemClass = null)
         {
-            return _items[name];
+            if (_itemInfos.ContainsKey(type))
+                throw new ArgumentException("Item type already registered");
+
+            _itemInfos.Add(type, new ItemInfo<T>(type, icon, name, description, maxStack, itemClass));
+        }
+
+        public static ItemBase<T> GetItemClass(T type)
+        {
+            if (!_itemInfos.ContainsKey(type))
+                throw new ArgumentException("Item type not registered");
+
+            return _itemInfos[type].ItemClass;
+        }
+
+        public static ItemInfo<T> GetItemInfo(T type)
+        {
+            if (!_itemInfos.ContainsKey(type))
+                throw new ArgumentException("Item type not registered");
+
+            return _itemInfos[type];
         }
     }
 }
