@@ -42,6 +42,7 @@ namespace AchromaticDev.Util.Inventory
             else
             {
                 item.Count += count;
+                _onItemAdded?.Invoke(new ItemStack<T>(type, count));
             }
         }
 
@@ -55,8 +56,8 @@ namespace AchromaticDev.Util.Inventory
             if (item.Count <= 0)
             {
                 items.Remove(item);
-                _onItemRemoved?.Invoke(item);
             }
+            _onItemRemoved?.Invoke(new ItemStack<T>(type, count));
         }
 
         public ItemStack<T> GetItem(T type)

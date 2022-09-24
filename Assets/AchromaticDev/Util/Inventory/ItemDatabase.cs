@@ -7,13 +7,13 @@ namespace AchromaticDev.Util.Inventory
 {
     public class ItemInfo<T> where T : Enum
     {
-        public T Type { get; private set; }
-        public Sprite Icon { get; private set; }
-        public string Name { get; private set; }
-        public string Description { get; private set; }
-        public int MaxStack { get; private set; }
+        public T Type { get; }
+        public Sprite Icon { get; }
+        public string Name { get; }
+        public string Description { get; }
+        public int MaxStack { get; }
 
-        public ItemBase<T> ItemClass { get; private set; }
+        public ItemBase<T> ItemClass { get; }
 
         public ItemInfo(T type, Sprite icon, string name, string description, int maxStack, ItemBase<T> itemClass)
         {
@@ -49,7 +49,7 @@ namespace AchromaticDev.Util.Inventory
         public static ItemBase<T> GetItemClass(T type)
         {
             if (!_itemInfos.ContainsKey(type))
-                throw new ArgumentException("Item type not registered");
+                throw new ArgumentException($"Item type {type} not registered");
 
             return _itemInfos[type].ItemClass;
         }
@@ -57,7 +57,7 @@ namespace AchromaticDev.Util.Inventory
         public static ItemInfo<T> GetItemInfo(T type)
         {
             if (!_itemInfos.ContainsKey(type))
-                throw new ArgumentException("Item type not registered");
+                throw new ArgumentException($"Item type {type} not registered");
 
             return _itemInfos[type];
         }

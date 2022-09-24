@@ -1,11 +1,13 @@
 using System;
+using UnityEngine;
 
 namespace AchromaticDev.Util.Inventory
 {
+    [Serializable]
     public class ItemStack<T> where T : Enum
     {
         public T Type => _type;
-        private readonly T _type;
+        [SerializeField] T _type;
 
         public Inventory<T> Inventory => _inventory;
         internal Inventory<T> _inventory;
@@ -15,7 +17,7 @@ namespace AchromaticDev.Util.Inventory
             get => _count;
             set => SetCount(value);
         }
-        private int _count;
+        [SerializeField] int _count;
 
         public ItemStack(T type, int count)
         {

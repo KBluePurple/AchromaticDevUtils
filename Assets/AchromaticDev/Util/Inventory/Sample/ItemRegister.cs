@@ -6,7 +6,8 @@ namespace AchromaticDev.Util.Inventory
 {
     public static class ItemRegister
     {
-        static ItemRegister()
+        [RuntimeInitializeOnLoadMethodAttribute]
+        private static void RegistItems()
         {
             RegisterClass(ItemType.Wood, null, "나무", "생각보다 무거운 나무 조각이다.");
             RegisterClass(ItemType.Stone, null, "돌", "가볍고 단단한 돌 조각이다.");
@@ -20,6 +21,8 @@ namespace AchromaticDev.Util.Inventory
             RegisterFoodClass(ItemType.Fish, null, "생선", "맛있는 생선이다.", 6);
             RegisterFoodClass(ItemType.Chicken, null, "닭", "맛있는 닭이다.", 7);
             RegisterFoodClass(ItemType.Pork, null, "돼지고기", "맛있는 돼지고기다.", 9);
+
+            Debug.Log($"ItemRegister: items registered.");
         }
 
         private static void RegisterClass(ItemType type, Sprite icon, string name, string description, int maxStack, ItemBase<ItemType> itemClass)
