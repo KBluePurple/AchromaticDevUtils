@@ -1,3 +1,4 @@
+using System;
 
 namespace AchromaticDev.Util.Inventory
 {
@@ -5,6 +6,8 @@ namespace AchromaticDev.Util.Inventory
     {
         public ItemBase Info => _info;
         private ItemBase _info;
+
+        public Inventory Inventory => _inventory;
         private Inventory _inventory;
 
         public int Count => _count;
@@ -14,21 +17,6 @@ namespace AchromaticDev.Util.Inventory
         {
             _info = itemBase;
             _count = count;
-        }
-
-        internal void Add(int count)
-        {
-            _count += count;
-        }
-        
-        internal void Remove(int count)
-        {
-            _count -= count;
-        }
-
-        internal void SetCount(int count)
-        {
-            
         }
     }
 }

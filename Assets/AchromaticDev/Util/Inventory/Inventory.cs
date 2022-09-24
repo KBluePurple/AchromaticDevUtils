@@ -11,8 +11,8 @@ namespace AchromaticDev.Util.Inventory
         public int Size => _size;
         [SerializeField] int _size;
 
-        private Action<InventoryItem> _onItemAdded;
-        private Action<InventoryItem> _onItemRemoved;
+        internal Action<InventoryItem> _onItemAdded;
+        internal Action<InventoryItem> _onItemRemoved;
 
         [SerializeField] private List<InventoryItem> items = new List<InventoryItem>();
 
