@@ -11,22 +11,24 @@ namespace AchromaticDev.Util.Notification
     {
         [SerializeField] Text MessageText;
 
-        internal int index
-        {
-            get {
-                return _index;
-            }
-            set {
-                _index = value;
-                MoveToIndex();
-            }
-        }
-
         private int _index = -1;
 
         private RectTransform rectTransform;
         private LinkedListNode<NotificationElement> _node;
         private NotificationManager manager;
+
+        internal int index
+        {
+            get
+            {
+                return _index;
+            }
+            set
+            {
+                _index = value;
+                MoveToIndex();
+            }
+        }
 
         public NotificationElement Initialize(string message, LinkedListNode<NotificationElement> node, int index)
         {
@@ -44,7 +46,8 @@ namespace AchromaticDev.Util.Notification
         public NotificationElement Show()
         {
             gameObject.SetActive(true);
-            rectTransform.DOAnchorPosX(rectTransform.sizeDelta.x, manager.Settings.AnimationDuration).SetEase(Ease.OutBack);
+            rectTransform.DOAnchorPosX(rectTransform.sizeDelta.x, manager.Settings.AnimationDuration)
+                .SetEase(manager.Settings.InEase);
             StartCoroutine(HideAfterDelay());
             return this;
         }
@@ -57,7 +60,8 @@ namespace AchromaticDev.Util.Notification
 
         public NotificationElement Hide()
         {
-            rectTransform.DOAnchorPosX(0, manager.Settings.AnimationDuration).SetEase(Ease.InBack);
+            rectTransform.DOAnchorPosX(0, manager.Settings.AnimationDuration)
+                .SetEase(manager.Settings.OutEase);
             StartCoroutine(DestroyAfterDelay(manager.Settings.AnimationDuration));
             return this;
         }

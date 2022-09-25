@@ -32,8 +32,7 @@ namespace AchromaticDev.Util.Notification
         [SerializeField] GameObject NotificationPrefab;
         [SerializeField] RectTransform NotificationContainer;
 
-        LinkedList<NotificationElement> NotificationQueue = new LinkedList<NotificationElement>();
-
+        private LinkedList<NotificationElement> NotificationQueue = new LinkedList<NotificationElement>();
         private NotificationFactory NotificationFactory;
 
         private void Awake()
@@ -49,16 +48,9 @@ namespace AchromaticDev.Util.Notification
                 var rectTransform = NotificationContainer.GetComponent<RectTransform>();
                 rectTransform.sizeDelta = new Vector2(Settings.NotificationSize.x, Settings.NotificationSize.y * Settings.MaxNotifications + Settings.SpaceBetween * (Settings.MaxNotifications - 1));
             }
-            else
-            {
-                if (Input.GetKeyDown(KeyCode.Space))
-                {
-                    CreateNotification("Hello World!").Show();
-                }
-            }
         }
 
-        public NotificationElement CreateNotification(string message)
+        public void ShowNotification(string message)
         {
             if (NotificationQueue.Count >= Settings.MaxNotifications)
             {
@@ -73,7 +65,7 @@ namespace AchromaticDev.Util.Notification
 
             var notificationObject = Instantiate(NotificationPrefab, NotificationContainer);
             Debug.Log($"NotificationQueue.Count: {NotificationQueue.Count}");
-            return notificationObject
+            notificationObject
                 .GetComponent<NotificationElement>()
                 .Initialize(
                     message,
@@ -83,7 +75,8 @@ namespace AchromaticDev.Util.Notification
                             .GetComponent<NotificationElement>()
                     ),
                     NotificationQueue.Count - 1
-                );
+                )
+                .Show();
         }
     }
 }
