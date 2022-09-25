@@ -1,6 +1,8 @@
+using System.Collections.Generic;
 using System.Collections;
 using System;
 using UnityEngine;
+using AchromaticDev.Extensions;
 
 namespace AchromaticDev.Util.Notification
 {
@@ -8,18 +10,38 @@ namespace AchromaticDev.Util.Notification
     {
         [SerializeField] GameObject NotificationPrefab;
         [SerializeField] RectTransform NotificationContainer;
+        LinkedList<NotificationElement> NotificationQueue = new LinkedList<NotificationElement>();
 
-        public void CreateNotification(string message)
+        public NotificationElement CreateNotification(string message)
         {
             var notificationObject = Instantiate(NotificationPrefab, NotificationContainer);
 
-            StartCoroutine(
-                DestroyNotification(
-                    notificationObject.GetComponent<NotificationElement>()
-                        .SetMessage(message)
-                        .Show()
+            return notificationObject
+                .GetComponent<NotificationElement>()
+                .Initialize(
+                    message,
+                    NotificationQueue
+                        .AddLast(
+                        notificationObject
+                            .GetComponent<NotificationElement>()
+                    ),
+                    NotificationQueue.Count
                 )
-            );
+                .Show();
+        }
+
+        private void ShowNotification(NotificationElement notification)
+        {
+            StartCoroutine(ShowNotificationCoroutine(notification));
+        }
+
+        private IEnumerator ShowNotificationCoroutine(NotificationElement notification)
+        {
+            yield return new WaitForSeconds(3f);
+            notification.Hide();
+            yield return new WaitForSeconds(0.5f);
+            NotificationQueue.Remove(notification);
+            notification.Destroy();
         }
 
         private IEnumerator DestroyNotification(NotificationElement notification)

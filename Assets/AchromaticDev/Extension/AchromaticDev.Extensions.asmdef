@@ -1,10 +1,7 @@
 {
-    "name": "AchromaticDev.Util.Notification",
-    "rootNamespace": "AchromaticDev.Util.Notification",
-    "references": [
-        "GUID:6b390a04765ef3945b99fde6065538a1",
-        "GUID:395c77cc26a9c514e94621f10a33e43a"
-    ],
+    "name": "AchromaticDev.Extensions",
+    "rootNamespace": "AchromaticDev.Extensions",
+    "references": [],
     "includePlatforms": [],
     "excludePlatforms": [],
     "allowUnsafeCode": false,

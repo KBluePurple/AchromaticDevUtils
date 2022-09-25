@@ -3,19 +3,38 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using DG.Tweening;
+using System;
 
 namespace AchromaticDev.Util.Notification
 {
     public class NotificationElement : MonoBehaviour
     {
         [SerializeField] Text MessageText;
+        
+        private int index
+        {
+            get {
+                return _index;
+            }
+            set {
+                _index = value;
+                MoveToIndex();
+            }
+        }
+
+        private int _index = -1;
 
         private RectTransform rectTransform;
+        private LinkedListNode<NotificationElement> _node;
 
-        public NotificationElement SetMessage(string message)
+        public NotificationElement Initialize(string message, LinkedListNode<NotificationElement> node, int index)
         {
-            rectTransform = GetComponent<RectTransform>();
+            _index = index;
+            _node = node;
+
             MessageText.text = message;
+            rectTransform = GetComponent<RectTransform>();
+            rectTransform.anchoredPosition = new Vector2(0, -50 * index);
             return this;
         }
 
@@ -36,7 +55,15 @@ namespace AchromaticDev.Util.Notification
         public NotificationElement Destroy()
         {
             Destroy(gameObject);
+            for (var node = _node.Next; node != null; node = node.Next)
+            {
+                node.Value.index--;
+            }
             return this;
+        }
+        private void MoveToIndex()
+        {
+
         }
     }
 }
