@@ -48,6 +48,11 @@ namespace AchromaticDev.Util.Notification
                 var rectTransform = NotificationContainer.GetComponent<RectTransform>();
                 rectTransform.sizeDelta = new Vector2(Settings.NotificationSize.x, Settings.NotificationSize.y * Settings.MaxNotifications + Settings.SpaceBetween * (Settings.MaxNotifications - 1));
             }
+
+            if (Input.GetKeyDown(KeyCode.Space))
+            {
+                ShowNotification("Test Notification");
+            }
         }
 
         public void ShowNotification(string message)
@@ -64,7 +69,6 @@ namespace AchromaticDev.Util.Notification
             }
 
             var notificationObject = Instantiate(NotificationPrefab, NotificationContainer);
-            Debug.Log($"NotificationQueue.Count: {NotificationQueue.Count}");
             notificationObject
                 .GetComponent<NotificationElement>()
                 .Initialize(
