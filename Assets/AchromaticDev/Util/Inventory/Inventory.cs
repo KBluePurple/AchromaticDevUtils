@@ -2,14 +2,15 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace AchromaticDev.Util.Inventory
 {
     [Serializable]
     public class Inventory<T> : IEnumerable where T : Enum
     {
-        public int Size => _size;
-        [SerializeField] int _size;
+        public int Size => size;
+        [FormerlySerializedAs("_size")] [SerializeField] int size;
 
         public Action<ItemStack<T>> OnItemAdded;
         public Action<ItemStack<T>> OnItemRemoved;
@@ -18,7 +19,7 @@ namespace AchromaticDev.Util.Inventory
 
         public Inventory(int size)
         {
-            _size = size;
+            this.size = size;
         }
 
         public IEnumerator GetEnumerator()
@@ -31,11 +32,11 @@ namespace AchromaticDev.Util.Inventory
             var item = GetItem(type);
             if (item == null)
             {
-                if (items.Count >= _size)
+                if (items.Count >= size)
                     return;
 
                 item = new ItemStack<T>(type, count);
-                item._inventory = this;
+                item.Inventory = this;
                 items.Add(item);
                 OnItemAdded?.Invoke(item);
             }
@@ -78,7 +79,7 @@ namespace AchromaticDev.Util.Inventory
 
         public bool IsFull()
         {
-            return items.Count == _size;
+            return items.Count == size;
         }
 
         public void Clear()

@@ -4,20 +4,21 @@ using UnityEngine;
 using UnityEngine.UI;
 using DG.Tweening;
 using System;
+using UnityEngine.Serialization;
 
 namespace AchromaticDev.Util.Notification
 {
     public class NotificationElement : MonoBehaviour
     {
-        [SerializeField] Text MessageText;
+        [SerializeField] Text messageText;
 
         private int _index = -1;
 
-        private RectTransform rectTransform;
+        private RectTransform _rectTransform;
         private LinkedListNode<NotificationElement> _node;
-        private NotificationManager manager;
+        private NotificationManager _manager;
 
-        internal int index
+        internal int Index
         {
             get
             {
@@ -35,34 +36,34 @@ namespace AchromaticDev.Util.Notification
             _index = index;
             _node = node;
 
-            MessageText.text = message;
-            manager = NotificationManager.Instance;
-            rectTransform = GetComponent<RectTransform>();
-            rectTransform.sizeDelta = manager.Settings.NotificationSize;
-            rectTransform.anchoredPosition = new Vector2(0, -manager.Settings.NotificationSize.y * index - manager.Settings.SpaceBetween * index);
+            messageText.text = message;
+            _manager = NotificationManager.Instance;
+            _rectTransform = GetComponent<RectTransform>();
+            _rectTransform.sizeDelta = _manager.settings.notificationSize;
+            _rectTransform.anchoredPosition = new Vector2(0, -_manager.settings.notificationSize.y * index - _manager.settings.spaceBetween * index);
             return this;
         }
 
         public NotificationElement Show()
         {
             gameObject.SetActive(true);
-            rectTransform.DOAnchorPosX(rectTransform.sizeDelta.x, manager.Settings.AnimationDuration)
-                .SetEase(manager.Settings.InEase);
+            _rectTransform.DOAnchorPosX(_rectTransform.sizeDelta.x, _manager.settings.animationDuration)
+                .SetEase(_manager.settings.inEase);
             StartCoroutine(HideAfterDelay());
             return this;
         }
 
         private IEnumerator HideAfterDelay()
         {
-            yield return new WaitForSeconds(manager.Settings.DisplayDuration);
+            yield return new WaitForSeconds(_manager.settings.displayDuration);
             Hide();
         }
 
         public NotificationElement Hide()
         {
-            rectTransform.DOAnchorPosX(0, manager.Settings.AnimationDuration)
-                .SetEase(manager.Settings.OutEase);
-            StartCoroutine(DestroyAfterDelay(manager.Settings.AnimationDuration));
+            _rectTransform.DOAnchorPosX(0, _manager.settings.animationDuration)
+                .SetEase(_manager.settings.outEase);
+            StartCoroutine(DestroyAfterDelay(_manager.settings.animationDuration));
             return this;
         }
 
@@ -74,12 +75,12 @@ namespace AchromaticDev.Util.Notification
 
         public NotificationElement Destroy()
         {
-            DOTween.Kill(rectTransform);
+            DOTween.Kill(_rectTransform);
 
             Destroy(gameObject);
             for (var node = _node.Next; node != null; node = node.Next)
             {
-                node.Value.index--;
+                node.Value.Index--;
             }
             
             _node.List?.Remove(_node);
@@ -88,8 +89,8 @@ namespace AchromaticDev.Util.Notification
 
         private void MoveToIndex()
         {
-            var notificationSettings = NotificationManager.Instance.Settings;
-            rectTransform.DOAnchorPosY(-notificationSettings.NotificationSize.y * index - notificationSettings.SpaceBetween * index, manager.Settings.AnimationDuration).SetEase(Ease.OutBack);
+            var notificationSettings = NotificationManager.Instance.settings;
+            _rectTransform.DOAnchorPosY(-notificationSettings.notificationSize.y * Index - notificationSettings.spaceBetween * Index, _manager.settings.animationDuration).SetEase(Ease.OutBack);
         }
     }
 }
