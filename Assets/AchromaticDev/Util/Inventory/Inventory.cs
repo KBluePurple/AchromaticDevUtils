@@ -36,7 +36,7 @@ namespace AchromaticDev.Util.Inventory
                     return;
 
                 item = new ItemStack<T>(type, count);
-                item.Inventory = this;
+                item.inventory = this;
                 items.Add(item);
                 OnItemAdded?.Invoke(item);
             }

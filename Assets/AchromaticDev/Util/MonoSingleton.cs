@@ -4,7 +4,7 @@ namespace AchromaticDev.Util
 {
     public class MonoSingleton<T> : MonoBehaviour where T : MonoSingleton<T>
     {
-        private static T _instance;
+        protected static T _instance;
         public static T Instance
         {
             get
