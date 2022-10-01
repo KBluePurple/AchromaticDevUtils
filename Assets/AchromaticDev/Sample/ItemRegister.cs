@@ -20,8 +20,6 @@ public static class ItemRegister
         RegisterFoodClass(ItemType.Fish, null, "생선", "맛있는 생선이다.", 6);
         RegisterFoodClass(ItemType.Chicken, null, "닭", "맛있는 닭이다.", 7);
         RegisterFoodClass(ItemType.Pork, null, "돼지고기", "맛있는 돼지고기다.", 9);
-
-        Debug.Log($"ItemRegister: items registered.");
     }
 
     private static void RegisterClass(ItemType type, Sprite icon, string name, string description, int maxStack, ItemBase<ItemType> itemClass)

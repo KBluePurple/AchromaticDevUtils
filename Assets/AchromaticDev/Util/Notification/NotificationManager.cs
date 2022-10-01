@@ -3,79 +3,77 @@ using System.Collections;
 using System.Collections.Generic;
 using DG.Tweening;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 namespace AchromaticDev.Util.Notification
 {
     [Serializable]
     public class NotificationSettings
     {
-        [FormerlySerializedAs("MaxNotifications")] [Header("Notification Settings")]
-        public int maxNotifications = 5;
-        [FormerlySerializedAs("DisplayDuration")] public float displayDuration = 3f;
+        [Header("Notification Settings")]
+        public int MaxNotifications = 5;
+        public float DisplayDuration = 3f;
 
-        [FormerlySerializedAs("AnimationDuration")] [Header("Animation Settings")]
-        public float animationDuration = 1.5f;
-        [FormerlySerializedAs("InEase")] public Ease inEase = Ease.InBack;
-        [FormerlySerializedAs("OutEase")] public Ease outEase = Ease.OutBack;
+        [Header("Animation Settings")]
+        public float AnimationDuration = 1.5f;
+        public Ease InEase = Ease.InBack;
+        public Ease OutEase = Ease.OutBack;
 
-        [FormerlySerializedAs("SpaceBetween")] [Header("Layout Settings")]
-        public float spaceBetween = 50f;
-        [FormerlySerializedAs("NotificationSize")] public Vector2 notificationSize = new Vector2(500, 100);
+        [Header("Layout Settings")]
+        public float SpaceBetween = 50f;
+        public Vector2 NotificationSize = new Vector2(500, 100);
     }
 
 
     [ExecuteAlways, RequireComponent(typeof(NotificationFactory))]
     public class NotificationManager : MonoSingleton<NotificationManager>
     {
-        [FormerlySerializedAs("Settings")] public NotificationSettings settings;
+        public NotificationSettings Settings;
 
-        [FormerlySerializedAs("NotificationPrefab")] [SerializeField] GameObject notificationPrefab;
-        [FormerlySerializedAs("NotificationContainer")] [SerializeField] RectTransform notificationContainer;
+        [SerializeField] GameObject NotificationPrefab;
+        [SerializeField] RectTransform NotificationContainer;
 
-        private LinkedList<NotificationElement> _notificationQueue = new LinkedList<NotificationElement>();
-        private NotificationFactory _notificationFactory;
+        private LinkedList<NotificationElement> NotificationQueue = new LinkedList<NotificationElement>();
+        private NotificationFactory NotificationFactory;
 
         private void Awake()
         {
-            _notificationFactory = GetComponent<NotificationFactory>();
+            NotificationFactory = GetComponent<NotificationFactory>();
         }
 
         private void Update()
         {
             if (!Application.isPlaying)
             {
-                notificationPrefab.GetComponent<RectTransform>().sizeDelta = settings.notificationSize;
-                var rectTransform = notificationContainer.GetComponent<RectTransform>();
-                rectTransform.sizeDelta = new Vector2(settings.notificationSize.x, settings.notificationSize.y * settings.maxNotifications + settings.spaceBetween * (settings.maxNotifications - 1));
+                NotificationPrefab.GetComponent<RectTransform>().sizeDelta = Settings.NotificationSize;
+                var rectTransform = NotificationContainer.GetComponent<RectTransform>();
+                rectTransform.sizeDelta = new Vector2(Settings.NotificationSize.x, Settings.NotificationSize.y * Settings.MaxNotifications + Settings.SpaceBetween * (Settings.MaxNotifications - 1));
             }
         }
 
         public void ShowNotification(string message)
         {
-            if (_notificationQueue.Count >= settings.maxNotifications)
+            if (NotificationQueue.Count >= Settings.MaxNotifications)
             {
-                _notificationQueue.First.Value.Index = -1;
-                _notificationQueue.RemoveFirst();
+                NotificationQueue.First.Value.Index = -1;
+                NotificationQueue.RemoveFirst();
 
-                foreach (var notification in _notificationQueue)
+                foreach (var notification in NotificationQueue)
                 {
                     notification.Index--;
                 }
             }
 
-            var notificationObject = Instantiate(notificationPrefab, notificationContainer);
-            Debug.Log($"NotificationQueue.Count: {_notificationQueue.Count}");
+            var notificationObject = Instantiate(NotificationPrefab, NotificationContainer);
             notificationObject
                 .GetComponent<NotificationElement>()
                 .Initialize(
                     message,
-                    _notificationQueue
+                    NotificationQueue
                         .AddLast(
                         notificationObject
                             .GetComponent<NotificationElement>()
                     ),
-                    _notificationQueue.Count - 1
+                    NotificationQueue.Count - 1
                 )
                 .Show();
         }
