@@ -1,10 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
+using AchromaticDev.Util.Pooling;
 using UnityEngine;
 using UnityEngine.UI;
 using DG.Tweening;
-using System;
-using UnityEngine.Serialization;
 
 namespace AchromaticDev.Util.Notification
 {
@@ -20,10 +19,7 @@ namespace AchromaticDev.Util.Notification
 
         internal int Index
         {
-            get
-            {
-                return _index;
-            }
+            get { return _index; }
             set
             {
                 _index = value;
@@ -39,31 +35,32 @@ namespace AchromaticDev.Util.Notification
             messageText.text = message;
             _manager = NotificationManager.Instance;
             _rectTransform = GetComponent<RectTransform>();
-            _rectTransform.sizeDelta = _manager.settings.notificationSize;
-            _rectTransform.anchoredPosition = new Vector2(0, -_manager.settings.notificationSize.y * index - _manager.settings.spaceBetween * index);
+            _rectTransform.sizeDelta = _manager.Settings.NotificationSize;
+            _rectTransform.anchoredPosition = new Vector2(0,
+                -_manager.Settings.NotificationSize.y * index - _manager.Settings.SpaceBetween * index);
             return this;
         }
 
         public NotificationElement Show()
         {
             gameObject.SetActive(true);
-            _rectTransform.DOAnchorPosX(_rectTransform.sizeDelta.x, _manager.settings.animationDuration)
-                .SetEase(_manager.settings.inEase);
+            _rectTransform.DOAnchorPosX(_rectTransform.sizeDelta.x, _manager.Settings.AnimationDuration)
+                .SetEase(_manager.Settings.InEase);
             StartCoroutine(HideAfterDelay());
             return this;
         }
 
         private IEnumerator HideAfterDelay()
         {
-            yield return new WaitForSeconds(_manager.settings.displayDuration);
+            yield return new WaitForSeconds(_manager.Settings.DisplayDuration);
             Hide();
         }
 
         public NotificationElement Hide()
         {
-            _rectTransform.DOAnchorPosX(0, _manager.settings.animationDuration)
-                .SetEase(_manager.settings.outEase);
-            StartCoroutine(DestroyAfterDelay(_manager.settings.animationDuration));
+            _rectTransform.DOAnchorPosX(0, _manager.Settings.AnimationDuration)
+                .SetEase(_manager.Settings.OutEase);
+            StartCoroutine(DestroyAfterDelay(_manager.Settings.AnimationDuration));
             return this;
         }
 
@@ -76,21 +73,23 @@ namespace AchromaticDev.Util.Notification
         public NotificationElement Destroy()
         {
             DOTween.Kill(_rectTransform);
-
-            Destroy(gameObject);
+            PoolManager.Destroy(gameObject);
             for (var node = _node.Next; node != null; node = node.Next)
             {
                 node.Value.Index--;
             }
-            
+
             _node.List?.Remove(_node);
             return this;
         }
 
         private void MoveToIndex()
         {
-            var notificationSettings = NotificationManager.Instance.settings;
-            _rectTransform.DOAnchorPosY(-notificationSettings.notificationSize.y * Index - notificationSettings.spaceBetween * Index, _manager.settings.animationDuration).SetEase(Ease.OutBack);
+            var notificationSettings = NotificationManager.Instance.Settings;
+            _rectTransform
+                .DOAnchorPosY(
+                    -notificationSettings.NotificationSize.y * Index - notificationSettings.SpaceBetween * Index,
+                    _manager.Settings.AnimationDuration).SetEase(Ease.OutBack);
         }
     }
 }

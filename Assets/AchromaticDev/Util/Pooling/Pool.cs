@@ -9,9 +9,8 @@ namespace AchromaticDev.Util.Pooling
     {
         public GameObject prefab = null;
         public int initialPoolSize = 0;
-        public bool clearOnSceneChange = false;
         
-        private readonly Queue<GameObject> _pool = new Queue<GameObject>();
+        private readonly Queue<PoolObject> _pool = new Queue<PoolObject>();
         private GameObject _poolParent = null;
         
         public int PoolSize => _pool.Count;
@@ -24,38 +23,33 @@ namespace AchromaticDev.Util.Pooling
             for (int i = 0; i < initialPoolSize; i++)
             {
                 GameObject obj = Instantiate(prefab, _poolParent.transform);
+                var poolObject = obj.AddComponent<PoolObject>();
+                poolObject.pool = this;
                 obj.SetActive(false);
-                _pool.Enqueue(obj);
+                _pool.Enqueue(poolObject);
             }
             
-            if (clearOnSceneChange)
-            {
-                SceneManager.sceneUnloaded += SceneUnloaded;
-            }
+            SceneManager.sceneUnloaded += SceneUnloaded;
         }
         
         private void SceneUnloaded(Scene scene)
         {
-            while (_pool.Count > 0)
-            {
-                Destroy(_pool.Dequeue());
-            }
+            _pool.Clear();
         }
         
-        public GameObject GetObject(Vector3 position, Quaternion rotation)
+        public GameObject GetObject(GameObject poolPrefab, Vector3 position, Quaternion rotation, Transform parent = null)
         {
             GameObject obj;
             if (_pool.Count > 0)
             {
-                obj = _pool.Dequeue();
+                obj = _pool.Dequeue().gameObject;
             }
             else
             {
-                obj = Instantiate(prefab, _poolParent.transform);
+                obj = Instantiate(poolPrefab, position, rotation, parent);
+                var poolObject = obj.AddComponent<PoolObject>();
+                poolObject.pool = this;
             }
-            
-            obj.transform.position = position;
-            obj.transform.rotation = rotation;
             obj.SetActive(true);
             
             return obj;
@@ -64,12 +58,7 @@ namespace AchromaticDev.Util.Pooling
         public void ReturnObject(GameObject obj)
         {
             obj.SetActive(false);
-            _pool.Enqueue(obj);
-        }
-        
-        public bool Contains(GameObject obj)
-        {
-            return _pool.Contains(obj);
+            _pool.Enqueue(obj.GetComponent<PoolObject>());
         }
     }
 }

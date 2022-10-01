@@ -170,4 +170,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 921dd55a4a516ea4d84d1f936342d9d5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  MessageText: {fileID: 7359128777882821393}
+  messageText: {fileID: 7359128777882821393}

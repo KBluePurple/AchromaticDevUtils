@@ -20,36 +20,41 @@ namespace AchromaticDev.Util.Pooling
                 
                 foreach (var poolSetting in pools)
                 {
-                    pools.Initialize();
+                    poolSetting.Initialize(_instance.transform);
                     _instance.PrefabDict.Add(poolSetting.prefab, poolSetting);
                 }
             }
         }
         
-        public static GameObject Instantiate(GameObject prefab, Vector3 position, Quaternion rotation)
+        public static GameObject Instantiate(GameObject prefab, Vector3 position, Quaternion rotation, Transform parent = null)
         {
             if (_instance.PrefabDict.ContainsKey(prefab))
             {
-                return _instance.PrefabDict[prefab].GetObject(position, rotation);
+                return _instance.PrefabDict[prefab].GetObject(prefab, position, rotation, parent);
             }
             else
             {
-                return Object.Instantiate(prefab, position, rotation);
+                return Object.Instantiate(prefab, position, rotation, parent);
             }
         }
         
+        public static GameObject Instantiate(GameObject prefab, Transform parent = null)
+        {
+            return Instantiate(prefab, Vector3.zero, Quaternion.identity, parent);
+        }
+
         public static void Destroy(GameObject gameObject)
         {
-            foreach (var pool in _instance.PrefabDict.Values)
-            {
-                if (pool.Contains(gameObject))
-                {
-                    pool.ReturnObject(gameObject);
-                    return;
-                }
-            }
+            var prefab = gameObject.GetComponent<PoolObject>().pool.prefab;
             
-            Object.Destroy(gameObject);
+            if (_instance.PrefabDict.ContainsKey(prefab))
+            {
+                _instance.PrefabDict[prefab].ReturnObject(gameObject);
+            }
+            else
+            {
+                Object.Destroy(gameObject);
+            }
         }
     }
 }

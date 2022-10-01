@@ -401,16 +401,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e26374ba069b6944a8e02db865a5e0bb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  settings:
-    maxNotifications: 10
-    displayDuration: 3
-    animationDuration: 0.5
-    inEase: 27
-    outEase: 26
-    spaceBetween: 10
-    notificationSize: {x: 500, y: 100}
-  notificationPrefab: {fileID: 6012212781244049999, guid: 0548eb9bfceb5e544baa8adadfb7ce56, type: 3}
-  notificationContainer: {fileID: 671353634}
+  Settings:
+    MaxNotifications: 10
+    DisplayDuration: 3
+    AnimationDuration: 0.5
+    InEase: 27
+    OutEase: 26
+    SpaceBetween: 10
+    NotificationSize: {x: 500, y: 100}
+  NotificationPrefab: {fileID: 6012212781244049999, guid: 0548eb9bfceb5e544baa8adadfb7ce56, type: 3}
+  NotificationContainer: {fileID: 671353634}
 --- !u!1 &1048469741
 GameObject:
   m_ObjectHideFlags: 0

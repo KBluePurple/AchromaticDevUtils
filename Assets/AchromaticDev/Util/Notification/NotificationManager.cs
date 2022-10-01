@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using AchromaticDev.Util.Pooling;
 using DG.Tweening;
 using UnityEngine;
 
@@ -48,6 +49,13 @@ namespace AchromaticDev.Util.Notification
                 var rectTransform = NotificationContainer.GetComponent<RectTransform>();
                 rectTransform.sizeDelta = new Vector2(Settings.NotificationSize.x, Settings.NotificationSize.y * Settings.MaxNotifications + Settings.SpaceBetween * (Settings.MaxNotifications - 1));
             }
+            else
+            {
+                if (Input.GetKeyDown(KeyCode.Space))
+                {
+                    ShowNotification("Test Notification");
+                }
+            }
         }
 
         public void ShowNotification(string message)
@@ -63,7 +71,7 @@ namespace AchromaticDev.Util.Notification
                 }
             }
 
-            var notificationObject = Instantiate(NotificationPrefab, NotificationContainer);
+            var notificationObject = PoolManager.Instantiate(NotificationPrefab, NotificationContainer);
             notificationObject
                 .GetComponent<NotificationElement>()
                 .Initialize(
