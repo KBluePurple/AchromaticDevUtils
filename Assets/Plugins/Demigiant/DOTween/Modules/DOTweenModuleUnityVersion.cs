@@ -16,7 +16,7 @@ namespace DG.Tweening
     /// Shortcuts/functions that are not strictly related to specific Modules
     /// but are available only on some Unity versions
     /// </summary>
-	public static class TweenModuleUnityVersion
+	public static class DOTweenModuleUnityVersion
     {
 #if UNITY_4_3 || UNITY_4_4 || UNITY_4_5 || UNITY_4_6 || UNITY_5 || UNITY_2017_1_OR_NEWER
         #region Unity 4.3 or Newer
@@ -93,7 +93,7 @@ namespace DG.Tweening
                 if (Debugger.logPriority > 0) Debugger.LogInvalidTween(t);
                 return null;
             }
-            return new TweenCyInstruction.WaitForCompletion(t);
+            return new DOTweenCYInstruction.WaitForCompletion(t);
         }
 
         /// <summary>
@@ -107,7 +107,7 @@ namespace DG.Tweening
                 if (Debugger.logPriority > 0) Debugger.LogInvalidTween(t);
                 return null;
             }
-            return new TweenCyInstruction.WaitForRewind(t);
+            return new DOTweenCYInstruction.WaitForRewind(t);
         }
 
         /// <summary>
@@ -121,7 +121,7 @@ namespace DG.Tweening
                 if (Debugger.logPriority > 0) Debugger.LogInvalidTween(t);
                 return null;
             }
-            return new TweenCyInstruction.WaitForKill(t);
+            return new DOTweenCYInstruction.WaitForKill(t);
         }
 
         /// <summary>
@@ -136,7 +136,7 @@ namespace DG.Tweening
                 if (Debugger.logPriority > 0) Debugger.LogInvalidTween(t);
                 return null;
             }
-            return new TweenCyInstruction.WaitForElapsedLoops(t, elapsedLoops);
+            return new DOTweenCYInstruction.WaitForElapsedLoops(t, elapsedLoops);
         }
 
         /// <summary>
@@ -152,7 +152,7 @@ namespace DG.Tweening
                 if (Debugger.logPriority > 0) Debugger.LogInvalidTween(t);
                 return null;
             }
-            return new TweenCyInstruction.WaitForPosition(t, position);
+            return new DOTweenCYInstruction.WaitForPosition(t, position);
         }
 
         /// <summary>
@@ -167,7 +167,7 @@ namespace DG.Tweening
                 if (Debugger.logPriority > 0) Debugger.LogInvalidTween(t);
                 return null;
             }
-            return new TweenCyInstruction.WaitForStart(t);
+            return new DOTweenCYInstruction.WaitForStart(t);
         }
 
         #endregion
@@ -321,81 +321,81 @@ namespace DG.Tweening
     // █████████████████████████████████████████████████████████████████████████████████████████████████████████████████████
 
 #if UNITY_5_3_OR_NEWER || UNITY_2017_1_OR_NEWER
-    public static class TweenCyInstruction
+    public static class DOTweenCYInstruction
     {
         public class WaitForCompletion : CustomYieldInstruction
         {
             public override bool keepWaiting { get {
-                return _t.active && !_t.IsComplete();
+                return t.active && !t.IsComplete();
             }}
-            readonly Tween _t;
+            readonly Tween t;
             public WaitForCompletion(Tween tween)
             {
-                _t = tween;
+                t = tween;
             }
         }
 
         public class WaitForRewind : CustomYieldInstruction
         {
             public override bool keepWaiting { get {
-                return _t.active && (!_t.playedOnce || _t.position * (_t.CompletedLoops() + 1) > 0);
+                return t.active && (!t.playedOnce || t.position * (t.CompletedLoops() + 1) > 0);
             }}
-            readonly Tween _t;
+            readonly Tween t;
             public WaitForRewind(Tween tween)
             {
-                _t = tween;
+                t = tween;
             }
         }
 
         public class WaitForKill : CustomYieldInstruction
         {
             public override bool keepWaiting { get {
-                return _t.active;
+                return t.active;
             }}
-            readonly Tween _t;
+            readonly Tween t;
             public WaitForKill(Tween tween)
             {
-                _t = tween;
+                t = tween;
             }
         }
 
         public class WaitForElapsedLoops : CustomYieldInstruction
         {
             public override bool keepWaiting { get {
-                return _t.active && _t.CompletedLoops() < _elapsedLoops;
+                return t.active && t.CompletedLoops() < elapsedLoops;
             }}
-            readonly Tween _t;
-            readonly int _elapsedLoops;
+            readonly Tween t;
+            readonly int elapsedLoops;
             public WaitForElapsedLoops(Tween tween, int elapsedLoops)
             {
-                _t = tween;
-                this._elapsedLoops = elapsedLoops;
+                t = tween;
+                this.elapsedLoops = elapsedLoops;
             }
         }
 
         public class WaitForPosition : CustomYieldInstruction
         {
             public override bool keepWaiting { get {
-                return _t.active && _t.position * (_t.CompletedLoops() + 1) < _position;
+                return t.active && t.position * (t.CompletedLoops() + 1) < position;
             }}
-            readonly Tween _t;
-            readonly float _position;
+            readonly Tween t;
+            readonly float position;
             public WaitForPosition(Tween tween, float position)
             {
-                _t = tween;
-                this._position = position;
+                t = tween;
+                this.position = position;
             }
         }
 
         public class WaitForStart : CustomYieldInstruction
         {
             public override bool keepWaiting { get {
-                return _t.active && !_t.playedOnce;
+                return t.active && !t.playedOnce;
             }}
-            readonly Tween _t;
+            readonly Tween t;
             public WaitForStart(Tween tween)
             {
-                _t = tween;
+                t = tween;
             }
         }
     }

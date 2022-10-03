@@ -34,6 +34,7 @@ namespace AchromaticDev.Util.Pooling
             }
 
             _instance.PrefabDict.Add(prefab, ScriptableObject.CreateInstance<Pool>());
+            _instance.PrefabDict[prefab].prefab = prefab;
             _instance.PrefabDict[prefab].Initialize(_instance.transform);
             return _instance.PrefabDict[prefab].GetObject(prefab, position, rotation, parent);
         }
@@ -53,9 +54,8 @@ namespace AchromaticDev.Util.Pooling
             }
             else
             {
-                _instance.PrefabDict.Add(prefab, ScriptableObject.CreateInstance<Pool>());
-                _instance.PrefabDict[prefab].Initialize(_instance.transform);
-                _instance.PrefabDict[prefab].ReturnObject(gameObject);
+                Debug.LogWarning($"PoolManager: {prefab.name} is not in the pool dictionary.");
+                Object.Destroy(gameObject);
             }
         }
     }

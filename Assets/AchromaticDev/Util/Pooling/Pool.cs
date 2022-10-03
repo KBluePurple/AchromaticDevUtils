@@ -43,11 +43,17 @@ namespace AchromaticDev.Util.Pooling
             else
             {
                 obj = Instantiate(poolPrefab, position, rotation, parent);
-                var poolObject = obj.AddComponent<PoolObject>();
+                obj.name = $"PoolObject ({poolPrefab.name})";
+                var poolObject = obj.GetComponent<PoolObject>();
+                
+                if (poolObject == null)
+                    poolObject = obj.AddComponent<PoolObject>();
+                
                 PoolManager.Instance.PoolObjectCache[obj] = poolObject;
                 poolObject.pool = this;
             }
             obj.SetActive(true);
+            PoolManager.Instance.PoolObjectCache[obj].onSpawn?.Invoke();
             
             return obj;
         }
@@ -58,9 +64,8 @@ namespace AchromaticDev.Util.Pooling
             if (PoolManager.Instance.PoolObjectCache.TryGetValue(obj, out var poolObject))
             {
                 _pool.Enqueue(poolObject);
+                poolObject.onDespawn?.Invoke();
             }
-            
-            PoolManager.Instance.PoolObjectCache.Add(obj, obj.GetComponent<PoolObject>());
         }
         
         private void SceneUnloaded(Scene scene)
