@@ -4,7 +4,7 @@ namespace AchromaticDev.Util
 {
     public class MonoSingleton<T> : MonoBehaviour where T : MonoSingleton<T>
     {
-        protected static T _instance;
+        private static T _instance;
         public static T Instance
         {
             get
@@ -19,6 +19,18 @@ namespace AchromaticDev.Util
                     }
                 }
                 return _instance;
+            }
+        }
+        
+        public static void Initialize(bool dontDestroyOnLoad = false)
+        {
+            if (_instance == null)
+            {
+                _instance = Instance;
+                if (dontDestroyOnLoad)
+                {
+                    DontDestroyOnLoad(_instance.gameObject);
+                }
             }
         }
     }
