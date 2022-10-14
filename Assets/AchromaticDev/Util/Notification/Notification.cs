@@ -6,11 +6,18 @@ using UnityEngine;
 
 namespace AchromaticDev.Util.Notification
 {
+    public enum NotificationFrom
+    {
+        Left,
+        Right
+    }
+
     [Serializable]
     public class NotificationSettings
     {
         [Header("Notification Settings")] public int maxNotifications = 5;
         public float displayDuration = 1f;
+        public NotificationFrom notificationFrom;
 
         [Header("Animation Settings")] public float animationDuration = 0.5f;
         public Ease inEase = Ease.OutBack;
@@ -38,21 +45,21 @@ namespace AchromaticDev.Util.Notification
 
         private void Update()
         {
-            if (!Application.isPlaying)
+            if (notificationPrefab != null)
+                notificationPrefab.GetComponent<RectTransform>().sizeDelta = settings.notificationSize;
+
+            _notificationContainer.sizeDelta = new Vector2(settings.notificationSize.x,
+                settings.notificationSize.y * settings.maxNotifications +
+                settings.spaceBetween * (settings.maxNotifications - 1));
+
+            notificationPrefab.GetComponent<RectTransform>().pivot =
+                (settings.notificationFrom == NotificationFrom.Left ? Vector2.right : Vector2.zero);
+
+            if (Input.GetKeyDown(KeyCode.Space))
             {
-                if (_notificationContainer == null)
-                    notificationPrefab.GetComponent<RectTransform>().sizeDelta = settings.notificationSize;
-                _notificationContainer.sizeDelta = new Vector2(settings.notificationSize.x,
-                    settings.notificationSize.y * settings.maxNotifications +
-                    settings.spaceBetween * (settings.maxNotifications - 1));
+                ShowNotification("Test Notification");
             }
-            else
-            {
-                if (Input.GetKeyDown(KeyCode.Space))
-                {
-                    ShowNotification("Test Notification");
-                }
-            }
+            // TODO : Remove Debug Code
         }
 
         public void ShowNotification(string message)
