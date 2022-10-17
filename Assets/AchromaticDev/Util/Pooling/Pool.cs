@@ -36,6 +36,7 @@ namespace AchromaticDev.Util.Pooling
         public GameObject GetObject(GameObject poolPrefab, Vector3 position, Quaternion rotation, Transform parent = null)
         {
             GameObject obj;
+            Debug.Log(_pool.Count);
             if (_pool.Count > 0)
             {
                 obj = _pool.Dequeue().gameObject;
@@ -63,6 +64,11 @@ namespace AchromaticDev.Util.Pooling
             obj.SetActive(false);
             if (PoolManager.Instance.PoolObjectCache.TryGetValue(obj, out var poolObject))
             {
+                if (_pool.Contains(poolObject))
+                {
+                    Debug.Log("Already in pool");
+                    return;
+                }
                 _pool.Enqueue(poolObject);
                 poolObject.onDespawn?.Invoke();
             }
