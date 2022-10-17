@@ -1,36 +1,37 @@
 using System;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace AchromaticDev.Util.Inventory
 {
     [Serializable]
     public class ItemStack<T> where T : Enum
     {
-        public T Type => _type;
-        [SerializeField] T _type;
-
+        public T Type => type;
+        [SerializeField] T type;
+        
         public Inventory<T> Inventory => _inventory;
         [NonSerialized] internal Inventory<T> _inventory;
 
         public int Count
         {
-            get => _count;
+            get => count;
             set => SetCount(value);
         }
-        [SerializeField] int _count;
+        [SerializeField] int count;
 
         public ItemStack(T type, int count)
         {
-            _type = type;
-            _count = count;
+            this.type = type;
+            this.count = count;
         }
 
-        public void SetCount(int count)
+        public void SetCount(int i)
         {
-            if (count < 0)
+            if (i < 0)
                 throw new ArgumentOutOfRangeException("Count cannot be less than 0");
 
-            if (count > ItemDatabase<T>.GetItemInfo(_type).MaxStack)
+            if (i > ItemDatabase<T>.GetItemInfo(type).MaxStack)
                 throw new ArgumentOutOfRangeException("Count cannot be greater than the max stack size");
         }
     }
